@@ -6,8 +6,6 @@ WORKDIR /app
 
 # Copy Maven files first (better caching)
 COPY pom.xml .
-COPY mvnw .
-COPY .mvn .mvn
 
 # Download dependencies
 RUN mvn dependency:go-offline -B
@@ -18,14 +16,15 @@ COPY src ./src
 # Build application
 RUN mvn clean package -DskipTests -B
 
-# Production stage
-FROM openjdk:17-jdk-slim
+# Production stage - Use Eclipse Temurin instead of deprecated OpenJDK
+FROM eclipse-temurin:17-jre-alpine
 
 # Install curl for health checks
-RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
+RUN apk add --no-cache curl
 
 # Create non-root user
-RUN groupadd -r appuser && useradd -r -g appuser appuser
+RUN addgroup -g 1001 -S appuser && \
+    adduser -S appuser -G appuser -u 1001
 
 # Set working directory
 WORKDIR /app
@@ -54,7 +53,5 @@ CMD ["java", \
      "-XX:+UseContainerSupport", \
      "-XX:MaxRAMPercentage=75.0", \
      "-XX:+UseG1GC", \
-     "-XX:+UnlockExperimentalVMOptions", \
-     "-XX:+UseCGroupMemoryLimitForHeap", \
      "-jar", \
      "app.jar"]

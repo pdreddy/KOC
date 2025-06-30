@@ -1,5 +1,5 @@
 # Multi-stage Dockerfile optimized for Render
-FROM maven:3.9.4-eclipse-temurin-17-alpineAS builder
+FROM maven:3.9.4-eclipse-temurin-17-alpine AS builder
 
 # Set working directory
 WORKDIR /app

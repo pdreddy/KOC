@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KOC Tournament - Team Standings</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f8fafc; color: #1e293b; line-height: 1.6; }
+        .header { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: white; padding: 2rem 0; text-align: center; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+        .container { max-width: 1200px; margin: 0 auto; padding: 2rem; }
+        .tabs { display: flex; background: white; border-radius: 12px; margin-bottom: 2rem; overflow: hidden; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); }
+        .tab { flex: 1; padding: 1rem 2rem; background: transparent; border: none; cursor: pointer; font-size: 1rem; font-weight: 500; transition: all 0.3s; color: #64748b; }
+        .tab.active { background: linear-gradient(135deg, #22d3ee, #0891b2); color: white; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(34, 211, 238, 0.3); }
+        .tab-content { background: white; border-radius: 12px; padding: 2rem; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); margin-bottom: 2rem; }
+        .hidden { display: none; }
+        .form-section { background: #f8fafc; padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem; border-left: 4px solid #22d3ee; }
+        .form-group { display: flex; gap: 15px; margin-bottom: 15px; flex-wrap: wrap; align-items: center; }
+        .team-section { display: flex; flex-direction: column; gap: 10px; padding: 15px; border: 2px solid #e2e8f0; border-radius: 8px; background: white; flex: 1; min-width: 200px; }
+        .team-label { font-weight: bold; color: #1e293b; text-align: center; }
+        select, input { padding: 10px; border: 2px solid #e2e8f0; border-radius: 5px; font-size: 16px; width: 100%; }
+        .save-btn { background: linear-gradient(135deg, #22d3ee, #0891b2); color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 4px; cursor: pointer; font-size: 1rem; transition: all 0.3s; }
+        .save-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(34, 211, 238, 0.3); }
+        .table { width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); }
+        .table th, .table td { padding: 1rem; text-align: left; border-bottom: 1px solid #e2e8f0; }
+        .table th { background: linear-gradient(135deg, #0f172a, #1e293b); color: white; font-weight: 600; }
+        .table tr:hover { background: #f8fafc; }
+        .rank { font-weight: bold; color: #22d3ee; text-align: center; }
+        .points { font-weight: bold; color: #059669; text-align: center; }
+        .sets, .singles { text-align: center; }
+        .vs-label { font-weight: bold; font-size: 18px; color: #22d3ee; padding: 0 10px; }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <h1>🎾 KOC Tournament - Team Standings 🏆</h1>
+        <p>Prosper Kings of the Court Season 1</p>
+    </header>
+
+    <div class="container">
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('group-a')">Group A</button>
+            <button class="tab" onclick="showTab('group-b')">Group B</button>
+        </div>
+
+        <div id="group-a-content" class="tab-content">
+            <h2 style="margin-bottom: 1.5rem; color: #1e293b;">Group A Standings</h2>
+
+            <div class="form-section">
+                <h3 style="margin-bottom: 1rem;">Add Match Result</h3>
+                <form id="matchFormA" onsubmit="addMatch(event, 'A')">
+                    <div class="form-group">
+                        <div class="team-section">
+                            <div class="team-label">Team 1</div>
+                            <select id="team1A" required>
+                                <option value="">Select Team 1</option>
+                                <option th:each="team : ${allTeams}"
+                                        th:if="${team.groupName == 'A'}"
+                                        th:value="${team.id}"
+                                        th:text="${team.name}"></option>
+                            </select>
+                            <input type="number" id="team1PointsA" placeholder="Points (0-5)" min="0" max="5" required>
+                            <input type="number" id="team1SetsA" placeholder="Sets Won" min="0" required>
+                            <input type="number" id="team1SinglesA" placeholder="Singles Won" min="0" max="5" required>
+                        </div>
+                        <div class="vs-label">VS</div>
+                        <div class="team-section">
+                            <div class="team-label">Team 2</div>
+                            <select id="team2A" required>
+                                <option value="">Select Team 2</option>
+                                <option th:each="team : ${allTeams}"
+                                        th:if="${team.groupName == 'A'}"
+                                        th:value="${team.id}"
+                                        th:text="${team.name}"></option>
+                            </select>
+                            <input type="number" id="team2PointsA" placeholder="Points (0-5)" min="0" max="5" required>
+                            <input type="number" id="team2SetsA" placeholder="Sets Won" min="0" required>
+                            <input type="number" id="team2SinglesA" placeholder="Singles Won" min="0" max="5" required>
+                        </div>
+                    </div>
+                    <div style="text-align: center;">
+                        <button type="submit" class="save-btn">Add Match Result</button>
+                    </div>
+                </form>
+            </div>
+
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Rank</th>
+                        <th>Team</th>
+                        <th>Matches Played</th>
+                        <th>Points</th>
+                        <th>Sets Won</th>
+                        <th>Singles Won</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="team, stat : ${groupATeams}">
+                        <td class="rank" th:text="${stat.index + 1}"></td>
+                        <td th:text="${team.name}"></td>
+                        <td class="sets" th:text="${team.matchesPlayed}"></td>
+                        <td class="points" th:text="${team.points}"></td>
+                        <td class="sets" th:text="${team.setsWon}"></td>
+                        <td class="singles" th:text="${team.singlesWon}"></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3 style="margin: 2rem 0 1rem; color: #1e293b;">Recent Matches</h3>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Teams</th>
+                        <th>Points</th>
+                        <th>Sets</th>
+                        <th>Singles</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="match : ${groupAMatches}">
+                        <td th:text="${match.team1.name + ' vs ' + match.team2.name}"></td>
+                        <td class="points" th:text="${match.team1Points + '-' + match.team2Points}"></td>
+                        <td class="sets" th:text="${match.team1Sets + '-' + match.team2Sets}"></td>
+                        <td class="singles" th:text="${match.team1Singles + '-' + match.team2Singles}"></td>
+                        <td th:text="${#temporals.format(match.matchDate, 'MMM dd, yyyy HH:mm')}"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div id="group-b-content" class="tab-content hidden">
+            <h2 style="margin-bottom: 1.5rem; color: #1e293b;">Group B Standings</h2>
+
+            <div class="form-section">
+                <h3 style="margin-bottom: 1rem;">Add Match Result</h3>
+                <form id="matchFormB" onsubmit="addMatch(event, 'B')">
+                    <div class="form-group">
+                        <div class="team-section">
+                            <div class="team-label">Team 1</div>
+                            <select id="team1B" required>
+                                <option value="">Select Team 1</option>
+                                <option th:each="team : ${allTeams}"
+                                        th:if="${team.groupName == 'B'}"
+                                        th:value="${team.id}"
+                                        th:text="${team.name}"></option>
+                            </select>
+                            <input type="number" id="team1PointsB" placeholder="Points (0-5)" min="0" max="5" required>
+                            <input type="number" id="team1SetsB" placeholder="Sets Won" min="0" required>
+                            <input type="number" id="team1SinglesB" placeholder="Singles Won" min="0" max="5" required>
+                        </div>
+                        <div class="vs-label">VS</div>
+                        <div class="team-section">
+                            <div class="team-label">Team 2</div>
+                            <select id="team2B" required>
+                                <option value="">Select Team 2</option>
+                                <option th:each="team : ${allTeams}"
+                                        th:if="${team.groupName == 'B'}"
+                                        th:value="${team.id}"
+                                        th:text="${team.name}"></option>
+                            </select>
+                            <input type="number" id="team2PointsB" placeholder="Points (0-5)" min="0" max="5" required>
+                            <input type="number" id="team2SetsB" placeholder="Sets Won" min="0" required>
+                            <input type="number" id="team2SinglesB" placeholder="Singles Won" min="0" max="5" required>
+                        </div>
+                    </div>
+                    <div style="text-align: center;">
+                        <button type="submit" class="save-btn">Add Match Result</button>
+                    </div>
+                </form>
+            </div>
+
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Rank</th>
+                        <th>Team</th>
+                        <th>Matches Played</th>
+                        <th>Points</th>
+                        <th>Sets Won</th>
+                        <th>Singles Won</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="team, stat : ${groupBTeams}">
+                        <td class="rank" th:text="${stat.index + 1}"></td>
+                        <td th:text="${team.name}"></td>
+                        <td class="sets" th:text="${team.matchesPlayed}"></td>
+                        <td class="points" th:text="${team.points}"></td>
+                        <td class="sets" th:text="${team.setsWon}"></td>
+                        <td class="singles" th:text="${team.singlesWon}"></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3 style="margin: 2rem 0 1rem; color: #1e293b;">Recent Matches</h3>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Teams</th>
+                        <th>Points</th>
+                        <th>Sets</th>
+                        <th>Singles</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="match : ${groupBMatches}">
+                        <td th:text="${match.team1.name + ' vs ' + match.team2.name}"></td>
+                        <td class="points" th:text="${match.team1Points + '-' + match.team2Points}"></td>
+                        <td class="sets" th:text="${match.team1Sets + '-' + match.team2Sets}"></td>
+                        <td class="singles" th:text="${match.team1Singles + '-' + match.team2Singles}"></td>
+                        <td th:text="${#temporals.format(match.matchDate, 'MMM dd, yyyy HH:mm')}"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        function showTab(group) {
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.add('hidden');
+            });
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            document.getElementById(group + '-content').classList.remove('hidden');
+            event.target.classList.add('active');
+        }
+
+        async function addMatch(event, group) {
+            event.preventDefault();
+
+            const team1Id = document.getElementById('team1' + group).value;
+            const team2Id = document.getElementById('team2' + group).value;
+            const team1Points = document.getElementById('team1Points' + group).value;
+            const team2Points = document.getElementById('team2Points' + group).value;
+            const team1Sets = document.getElementById('team1Sets' + group).value;
+            const team2Sets = document.getElementById('team2Sets' + group).value;
+            const team1Singles = document.getElementById('team1Singles' + group).value;
+            const team2Singles = document.getElementById('team2Singles' + group).value;
+
+            if (parseInt(team1Points) + parseInt(team2Points) !== 5) {
+                alert('Total points must equal 5!');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('team1Id', team1Id);
+            formData.append('team2Id', team2Id);
+            formData.append('team1Points', team1Points);
+            formData.append('team2Points', team2Points);
+            formData.append('team1Sets', team1Sets);
+            formData.append('team2Sets', team2Sets);
+            formData.append('team1Singles', team1Singles);
+            formData.append('team2Singles', team2Singles);
+
+            try {
+                const response = await fetch('/api/matches', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (response.ok) {
+                    alert('Match result added successfully!');
+                    location.reload();
+                } else {
+                    alert('Error adding match result!');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error adding match result!');
+            }
+        }
+    </script>
+</body>
+</html>

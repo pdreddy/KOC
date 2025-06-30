@@ -29,252 +29,593 @@
         .points { font-weight: bold; color: #059669; text-align: center; }
         .sets, .singles { text-align: center; }
         .vs-label { font-weight: bold; font-size: 18px; color: #22d3ee; padding: 0 10px; }
+
+        /* Rules Styles */
+        .rules-content {
+            padding: 0;
+        }
+        .rules-title {
+            margin-bottom: 1.5rem;
+            color: #1e293b;
+            font-size: 2.2rem;
+            font-weight: 700;
+            text-align: center;
+            background: linear-gradient(135deg, #22d3ee 0%, #0891b2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .rules-section {
+            display: grid;
+            gap: 1.5rem;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+        }
+        .rule-card {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .rule-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #22d3ee, #0891b2, #0e7490);
+            border-radius: 12px 12px 0 0;
+        }
+        .rule-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .rule-card h3 {
+            color: #1e293b;
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .rule-card h4 {
+            color: #334155;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin: 1rem 0 0.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .rule-card ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .rule-card li {
+            position: relative;
+            padding: 0.4rem 0 0.4rem 1.5rem;
+            color: #475569;
+            line-height: 1.6;
+            transition: color 0.2s ease;
+        }
+        .rule-card li::before {
+            content: '🎾';
+            position: absolute;
+            left: 0;
+            top: 0.4rem;
+            font-size: 0.8rem;
+        }
+        .rule-card li:hover {
+            color: #1e293b;
+            background-color: rgba(34, 211, 238, 0.05);
+            border-radius: 6px;
+            margin: 0 -0.5rem;
+            padding-left: 2rem;
+        }
+        .rule-card p {
+            color: #475569;
+            line-height: 1.6;
+            margin: 0.5rem 0;
+        }
+        .rule-note {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border: 1px solid #f59e0b;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1rem;
+            color: #92400e;
+            font-weight: 500;
+            position: relative;
+            overflow: hidden;
+        }
+        .rule-note::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #f59e0b, #d97706);
+        }
+        .rules-footer {
+            margin-top: 2rem;
+            color: #1e293b;
+            font-weight: bold;
+            text-align: center;
+            font-size: 1.2rem;
+            padding: 1rem;
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            border-radius: 12px;
+            border: 2px solid #22d3ee;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .rules-section {
+                grid-template-columns: 1fr;
+            }
+            .rules-title {
+                font-size: 1.8rem;
+            }
+            .rule-card {
+                padding: 1rem;
+            }
+            .rule-card h3 {
+                font-size: 1.1rem;
+            }
+            .tabs {
+                flex-wrap: wrap;
+            }
+            .tab {
+                min-width: 100px;
+                padding: 0.8rem 1rem;
+                font-size: 0.9rem;
+            }
+        }
     </style>
 </head>
 <body>
-    <header class="header">
-        <h1>🎾 KOC Tournament - Team Standings 🏆</h1>
-        <p>Prosper Kings of the Court Season 1</p>
-    </header>
+<header class="header">
+    <h1>🎾 KOC Tournament - Team Standings 🏆</h1>
+    <p>Prosper Kings of the Court Season 1</p>
+</header>
 
-    <div class="container">
-        <div class="tabs">
-            <button class="tab active" onclick="showTab('group-a')">Group A</button>
-            <button class="tab" onclick="showTab('group-b')">Group B</button>
-        </div>
-
-        <div id="group-a-content" class="tab-content">
-            <h2 style="margin-bottom: 1.5rem; color: #1e293b;">Group A Standings</h2>
-
-            <div class="form-section">
-                <h3 style="margin-bottom: 1rem;">Add Match Result</h3>
-                <form id="matchFormA" onsubmit="addMatch(event, 'A')">
-                    <div class="form-group">
-                        <div class="team-section">
-                            <div class="team-label">Team 1</div>
-                            <select id="team1A" required>
-                                <option value="">Select Team 1</option>
-                                <option th:each="team : ${allTeams}"
-                                        th:if="${team.groupName == 'A'}"
-                                        th:value="${team.id}"
-                                        th:text="${team.name}"></option>
-                            </select>
-                            <input type="number" id="team1PointsA" placeholder="Points (0-5)" min="0" max="5" required>
-                            <input type="number" id="team1SetsA" placeholder="Sets Won" min="0" required>
-                            <input type="number" id="team1SinglesA" placeholder="Singles Won" min="0" max="5" required>
-                        </div>
-                        <div class="vs-label">VS</div>
-                        <div class="team-section">
-                            <div class="team-label">Team 2</div>
-                            <select id="team2A" required>
-                                <option value="">Select Team 2</option>
-                                <option th:each="team : ${allTeams}"
-                                        th:if="${team.groupName == 'A'}"
-                                        th:value="${team.id}"
-                                        th:text="${team.name}"></option>
-                            </select>
-                            <input type="number" id="team2PointsA" placeholder="Points (0-5)" min="0" max="5" required>
-                            <input type="number" id="team2SetsA" placeholder="Sets Won" min="0" required>
-                            <input type="number" id="team2SinglesA" placeholder="Singles Won" min="0" max="5" required>
-                        </div>
-                    </div>
-                    <div style="text-align: center;">
-                        <button type="submit" class="save-btn">Add Match Result</button>
-                    </div>
-                </form>
-            </div>
-
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Rank</th>
-                        <th>Team</th>
-                        <th>Matches Played</th>
-                        <th>Points</th>
-                        <th>Sets Won</th>
-                        <th>Singles Won</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr th:each="team, stat : ${groupATeams}">
-                        <td class="rank" th:text="${stat.index + 1}"></td>
-                        <td th:text="${team.name}"></td>
-                        <td class="sets" th:text="${team.matchesPlayed}"></td>
-                        <td class="points" th:text="${team.points}"></td>
-                        <td class="sets" th:text="${team.setsWon}"></td>
-                        <td class="singles" th:text="${team.singlesWon}"></td>
-                    </tr>
-                </tbody>
-            </table>
-
-            <h3 style="margin: 2rem 0 1rem; color: #1e293b;">Recent Matches</h3>
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Teams</th>
-                        <th>Points</th>
-                        <th>Sets</th>
-                        <th>Singles</th>
-                        <th>Date</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr th:each="match : ${groupAMatches}">
-                        <td th:text="${match.team1.name + ' vs ' + match.team2.name}"></td>
-                        <td class="points" th:text="${match.team1Points + '-' + match.team2Points}"></td>
-                        <td class="sets" th:text="${match.team1Sets + '-' + match.team2Sets}"></td>
-                        <td class="singles" th:text="${match.team1Singles + '-' + match.team2Singles}"></td>
-                        <td th:text="${#temporals.format(match.matchDate, 'MMM dd, yyyy HH:mm')}"></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <div id="group-b-content" class="tab-content hidden">
-            <h2 style="margin-bottom: 1.5rem; color: #1e293b;">Group B Standings</h2>
-
-            <div class="form-section">
-                <h3 style="margin-bottom: 1rem;">Add Match Result</h3>
-                <form id="matchFormB" onsubmit="addMatch(event, 'B')">
-                    <div class="form-group">
-                        <div class="team-section">
-                            <div class="team-label">Team 1</div>
-                            <select id="team1B" required>
-                                <option value="">Select Team 1</option>
-                                <option th:each="team : ${allTeams}"
-                                        th:if="${team.groupName == 'B'}"
-                                        th:value="${team.id}"
-                                        th:text="${team.name}"></option>
-                            </select>
-                            <input type="number" id="team1PointsB" placeholder="Points (0-5)" min="0" max="5" required>
-                            <input type="number" id="team1SetsB" placeholder="Sets Won" min="0" required>
-                            <input type="number" id="team1SinglesB" placeholder="Singles Won" min="0" max="5" required>
-                        </div>
-                        <div class="vs-label">VS</div>
-                        <div class="team-section">
-                            <div class="team-label">Team 2</div>
-                            <select id="team2B" required>
-                                <option value="">Select Team 2</option>
-                                <option th:each="team : ${allTeams}"
-                                        th:if="${team.groupName == 'B'}"
-                                        th:value="${team.id}"
-                                        th:text="${team.name}"></option>
-                            </select>
-                            <input type="number" id="team2PointsB" placeholder="Points (0-5)" min="0" max="5" required>
-                            <input type="number" id="team2SetsB" placeholder="Sets Won" min="0" required>
-                            <input type="number" id="team2SinglesB" placeholder="Singles Won" min="0" max="5" required>
-                        </div>
-                    </div>
-                    <div style="text-align: center;">
-                        <button type="submit" class="save-btn">Add Match Result</button>
-                    </div>
-                </form>
-            </div>
-
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Rank</th>
-                        <th>Team</th>
-                        <th>Matches Played</th>
-                        <th>Points</th>
-                        <th>Sets Won</th>
-                        <th>Singles Won</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr th:each="team, stat : ${groupBTeams}">
-                        <td class="rank" th:text="${stat.index + 1}"></td>
-                        <td th:text="${team.name}"></td>
-                        <td class="sets" th:text="${team.matchesPlayed}"></td>
-                        <td class="points" th:text="${team.points}"></td>
-                        <td class="sets" th:text="${team.setsWon}"></td>
-                        <td class="singles" th:text="${team.singlesWon}"></td>
-                    </tr>
-                </tbody>
-            </table>
-
-            <h3 style="margin: 2rem 0 1rem; color: #1e293b;">Recent Matches</h3>
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Teams</th>
-                        <th>Points</th>
-                        <th>Sets</th>
-                        <th>Singles</th>
-                        <th>Date</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr th:each="match : ${groupBMatches}">
-                        <td th:text="${match.team1.name + ' vs ' + match.team2.name}"></td>
-                        <td class="points" th:text="${match.team1Points + '-' + match.team2Points}"></td>
-                        <td class="sets" th:text="${match.team1Sets + '-' + match.team2Sets}"></td>
-                        <td class="singles" th:text="${match.team1Singles + '-' + match.team2Singles}"></td>
-                        <td th:text="${#temporals.format(match.matchDate, 'MMM dd, yyyy HH:mm')}"></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+<div class="container">
+    <div class="tabs">
+        <button class="tab active" onclick="showTab('group-a')">Group A</button>
+        <button class="tab" onclick="showTab('group-b')">Group B</button>
+        <button class="tab" onclick="showTab('rules')">📋 Rules</button>
     </div>
 
-    <script>
-        function showTab(group) {
-            document.querySelectorAll('.tab-content').forEach(content => {
-                content.classList.add('hidden');
-            });
-            document.querySelectorAll('.tab').forEach(tab => {
-                tab.classList.remove('active');
-            });
+    <div id="group-a-content" class="tab-content">
+        <h2 style="margin-bottom: 1.5rem; color: #1e293b;">Group A Standings</h2>
 
-            document.getElementById(group + '-content').classList.remove('hidden');
-            event.target.classList.add('active');
+        <div class="form-section">
+            <h3 style="margin-bottom: 1rem;">Add Match Result</h3>
+            <form id="matchFormA" onsubmit="addMatch(event, 'A')">
+                <div class="form-group">
+                    <div class="team-section">
+                        <div class="team-label">Team 1</div>
+                        <select id="team1A" required>
+                            <option value="">Select Team 1</option>
+                            <option th:each="team : ${allTeams}"
+                                    th:if="${team.groupName == 'A'}"
+                                    th:value="${team.id}"
+                                    th:text="${team.name}"></option>
+                        </select>
+                        <input type="number" id="team1PointsA" placeholder="Points (0-5)" min="0" max="5" required>
+                        <input type="number" id="team1SetsA" placeholder="Sets Won" min="0" required>
+                        <input type="number" id="team1SinglesA" placeholder="Singles Won" min="0" max="5" required>
+                    </div>
+                    <div class="vs-label">VS</div>
+                    <div class="team-section">
+                        <div class="team-label">Team 2</div>
+                        <select id="team2A" required>
+                            <option value="">Select Team 2</option>
+                            <option th:each="team : ${allTeams}"
+                                    th:if="${team.groupName == 'A'}"
+                                    th:value="${team.id}"
+                                    th:text="${team.name}"></option>
+                        </select>
+                        <input type="number" id="team2PointsA" placeholder="Points (0-5)" min="0" max="5" required>
+                        <input type="number" id="team2SetsA" placeholder="Sets Won" min="0" required>
+                        <input type="number" id="team2SinglesA" placeholder="Singles Won" min="0" max="5" required>
+                    </div>
+                </div>
+                <div style="text-align: center;">
+                    <button type="submit" class="save-btn">Add Match Result</button>
+                </div>
+            </form>
+        </div>
+
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Rank</th>
+                <th>Team</th>
+                <th>Matches Played</th>
+                <th>Points</th>
+                <th>Sets Won</th>
+                <th>Singles Won</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="team, stat : ${groupATeams}">
+                <td class="rank" th:text="${stat.index + 1}"></td>
+                <td th:text="${team.name}"></td>
+                <td class="sets" th:text="${team.matchesPlayed}"></td>
+                <td class="points" th:text="${team.points}"></td>
+                <td class="sets" th:text="${team.setsWon}"></td>
+                <td class="singles" th:text="${team.singlesWon}"></td>
+            </tr>
+            </tbody>
+        </table>
+
+        <h3 style="margin: 2rem 0 1rem; color: #1e293b;">Recent Matches</h3>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Teams</th>
+                <th>Points</th>
+                <th>Sets</th>
+                <th>Singles</th>
+                <th>Date</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="match : ${groupAMatches}">
+                <td th:text="${match.team1.name + ' vs ' + match.team2.name}"></td>
+                <td class="points" th:text="${match.team1Points + '-' + match.team2Points}"></td>
+                <td class="sets" th:text="${match.team1Sets + '-' + match.team2Sets}"></td>
+                <td class="singles" th:text="${match.team1Singles + '-' + match.team2Singles}"></td>
+                <td th:text="${#temporals.format(match.matchDate, 'MMM dd, yyyy HH:mm')}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div id="group-b-content" class="tab-content hidden">
+        <h2 style="margin-bottom: 1.5rem; color: #1e293b;">Group B Standings</h2>
+
+        <div class="form-section">
+            <h3 style="margin-bottom: 1rem;">Add Match Result</h3>
+            <form id="matchFormB" onsubmit="addMatch(event, 'B')">
+                <div class="form-group">
+                    <div class="team-section">
+                        <div class="team-label">Team 1</div>
+                        <select id="team1B" required>
+                            <option value="">Select Team 1</option>
+                            <option th:each="team : ${allTeams}"
+                                    th:if="${team.groupName == 'B'}"
+                                    th:value="${team.id}"
+                                    th:text="${team.name}"></option>
+                        </select>
+                        <input type="number" id="team1PointsB" placeholder="Points (0-5)" min="0" max="5" required>
+                        <input type="number" id="team1SetsB" placeholder="Sets Won" min="0" required>
+                        <input type="number" id="team1SinglesB" placeholder="Singles Won" min="0" max="5" required>
+                    </div>
+                    <div class="vs-label">VS</div>
+                    <div class="team-section">
+                        <div class="team-label">Team 2</div>
+                        <select id="team2B" required>
+                            <option value="">Select Team 2</option>
+                            <option th:each="team : ${allTeams}"
+                                    th:if="${team.groupName == 'B'}"
+                                    th:value="${team.id}"
+                                    th:text="${team.name}"></option>
+                        </select>
+                        <input type="number" id="team2PointsB" placeholder="Points (0-5)" min="0" max="5" required>
+                        <input type="number" id="team2SetsB" placeholder="Sets Won" min="0" required>
+                        <input type="number" id="team2SinglesB" placeholder="Singles Won" min="0" max="5" required>
+                    </div>
+                </div>
+                <div style="text-align: center;">
+                    <button type="submit" class="save-btn">Add Match Result</button>
+                </div>
+            </form>
+        </div>
+
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Rank</th>
+                <th>Team</th>
+                <th>Matches Played</th>
+                <th>Points</th>
+                <th>Sets Won</th>
+                <th>Singles Won</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="team, stat : ${groupBTeams}">
+                <td class="rank" th:text="${stat.index + 1}"></td>
+                <td th:text="${team.name}"></td>
+                <td class="sets" th:text="${team.matchesPlayed}"></td>
+                <td class="points" th:text="${team.points}"></td>
+                <td class="sets" th:text="${team.setsWon}"></td>
+                <td class="singles" th:text="${team.singlesWon}"></td>
+            </tr>
+            </tbody>
+        </table>
+
+        <h3 style="margin: 2rem 0 1rem; color: #1e293b;">Recent Matches</h3>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Teams</th>
+                <th>Points</th>
+                <th>Sets</th>
+                <th>Singles</th>
+                <th>Date</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="match : ${groupBMatches}">
+                <td th:text="${match.team1.name + ' vs ' + match.team2.name}"></td>
+                <td class="points" th:text="${match.team1Points + '-' + match.team2Points}"></td>
+                <td class="sets" th:text="${match.team1Sets + '-' + match.team2Sets}"></td>
+                <td class="singles" th:text="${match.team1Singles + '-' + match.team2Singles}"></td>
+                <td th:text="${#temporals.format(match.matchDate, 'MMM dd, yyyy HH:mm')}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- NEW RULES TAB CONTENT -->
+    <div id="rules-content" class="tab-content hidden">
+        <div class="rules-content">
+            <h2 class="rules-title">KOC League Rules</h2>
+            <div class="rules-section">
+
+                <div class="rule-card">
+                    <h3>Match Day – Lineups & Scheduling</h3>
+                    <ul>
+                        <li>All singles and doubles match lines must be played on the same day.</li>
+                        <li>Team captains must exchange full lineups simultaneously before the match begins – no changes allowed afterward.</li>
+                        <li>A team wins the match with a score of 5-0, 4-1, or 3-2 under standard conditions.</li>
+                        <li>A minimum of 2 match lines must be played for a team to claim a win.</li>
+                        <li>Match lines may be played on different days only due to bad weather.</li>
+                    </ul>
+                </div>
+
+                <div class="rule-card">
+                    <h3>Late Arrivals</h3>
+                    <ul>
+                        <li>All players must arrive at least 15 minutes early for warm-up.</li>
+                        <li>A player unavailable at match start loses toss privilege.</li>
+                        <li>For every 10 minutes late, the player/team forfeits 1 game:</li>
+                        <li>10 minutes = 1 game</li>
+                        <li>20 minutes = 2 games</li>
+                        <li>30 minutes = match line forfeited</li>
+                    </ul>
+                    <div class="rule-note">
+                        ⚠️ Note: These rules ensure fairness and discipline — but always be generous and kind to your opponents. Use them wisely and in good spirit.
+                    </div>
+                </div>
+
+                <div class="rule-card">
+                    <h3>Match Scheduling</h3>
+                    <ul>
+                        <li>Captains must propose match date and time after discussing with their teams.</li>
+                        <li>Once agreed, the schedule is binding and can only be changed if both captains agree again.</li>
+                        <li>If no agreement is reached, the match defaults to Sunday evening.</li>
+                        <li>The team present at the default time receives a BYE.</li>
+                        <li>If neither team shows, no points are awarded.</li>
+                    </ul>
+                </div>
+
+                <div class="rule-card">
+                    <h3>Line Calls & Coaching</h3>
+                    <ul>
+                        <li>Players are responsible for their own line calls – no outside interference allowed.</li>
+                        <li>Disputes should be raised after the match with the core team.</li>
+                        <li>Line call volunteers will assist during playoffs.</li>
+                        <li>Coaching is allowed only during breaks, not during live play.</li>
+                    </ul>
+                </div>
+
+                <div class="rule-card">
+                    <h3>Round 1: Singles Focus 🎾</h3>
+                    <h4>✅ Singles Matches (4 points):</h4>
+                    <ul>
+                        <li>A1 vs. B1 (1 point)</li>
+                        <li>A2 vs. B2 (1 point)</li>
+                        <li>A1 vs. B2 (Reverse Singles, 1 point)</li>
+                        <li>A2 vs. B1 (Reverse Singles, 1 point)</li>
+                    </ul>
+                    <h4>⚡ Captain's Choice (1 point):</h4>
+                    <ul>
+                        <li>🏸 Doubles (3 sets, 4 games): e.g., A1 & A2 vs. B1 & B2</li>
+                        <li>🎾 Extra Singles: e.g., A3 vs. B3</li>
+                    </ul>
+                </div>
+
+                <div class="rule-card">
+                    <h3>Round 2: Doubles Focus 🤝</h3>
+                    <h4>✅ Doubles Matches (4 points):</h4>
+                    <ul>
+                        <li>A1 & A2 vs. B1 & B2 (1 point)</li>
+                        <li>A3 & A4 vs. B3 & B4 (1 point)</li>
+                        <li>A1 & A2 vs. B3 & B4 (Reverse Doubles, 1 point)</li>
+                        <li>A3 & A4 vs. B1 & B2 (Reverse Doubles, 1 point)</li>
+                    </ul>
+                    <h4>⚡ Captain's Choice (1 point):</h4>
+                    <ul>
+                        <li>🎾 Extra Singles: e.g., A5 vs. B5</li>
+                        <li>🔥 Super Tiebreak to 10 (Doubles): Captains share player names first.</li>
+                    </ul>
+                    <div class="rule-note">
+                        📢 Captains lock in 5th match before round starts.
+                    </div>
+                </div>
+
+                <div class="rule-card">
+                    <h3>Playoff Qualification & Format</h3>
+                    <h4>Qualification Criteria</h4>
+                    <ul>
+                        <li>Total points across battles</li>
+                        <li>Total sets won (if points are tied)</li>
+                        <li>Total singles matches won (if sets are tied)</li>
+                    </ul>
+                    <h4>Playoff Format</h4>
+                    <ul>
+                        <li>All players must participate</li>
+                        <li>Singles: Best of 5 sets</li>
+                        <li>Doubles: Best of 3 sets</li>
+                        <li>Reverse Doubles: Best of 3 sets</li>
+                    </ul>
+                </div>
+
+                <div class="rule-card">
+                    <h3>Player Usage Rules</h3>
+                    <h4>Minimum Participation</h4>
+                    <ul>
+                        <li>Each player must play a minimum of 3 match days or 6 individual matches.</li>
+                        <li>RED ALERT: Team will be disqualified from playoffs if this criterion isn't met.</li>
+                    </ul>
+                    <h4>Doubles Combinations</h4>
+                    <ul>
+                        <li>A specific doubles pairing can be used up to 2 times without triggering the Impact Player rule.</li>
+                    </ul>
+                </div>
+
+                <div class="rule-card">
+                    <h3>Impact Player Rule (Group Stage Only)</h3>
+                    <ul>
+                        <li>Captains must declare intent to use an Impact Player before the round begins.</li>
+                        <li>No need to specify which match the impact player will be used in.</li>
+                        <li>Once a player is used as an impact player twice, they cannot be reused in that role.</li>
+                    </ul>
+                </div>
+
+                <div class="rule-card">
+                    <h3>Injury Replacements & Doubles Pairing Rules</h3>
+                    <h4>Injury Replacements</h4>
+                    <ul>
+                        <li>League Stage: Replace with a player having a similar UTR.</li>
+                        <li>Playoffs: Only allowed if 2 players are ruled out. A buffer week is provided.</li>
+                    </ul>
+                    <h4>Doubles Pairing Rule</h4>
+                    <ul>
+                        <li>A doubles pair can only play together on 2 match days during the season.</li>
+                        <li>If violated, that match day will earn zero points.</li>
+                    </ul>
+                </div>
+
+                <div class="rule-card">
+                    <h3>Quick Notes & Special Rules</h3>
+                    <h4>No-Ad Scoring</h4>
+                    <ul>
+                        <li>Games are decided by a single point at deuce — no two-point advantage required.</li>
+                        <li>Receiving team chooses side on deciding point.</li>
+                    </ul>
+                    <h4>Captain's Choice</h4>
+                    <ul>
+                        <li>The 5th match in each round offers strategic flexibility and must be locked before the round starts.</li>
+                        <li>If your full team isn't available, play with the available players. No postponements to the next week.</li>
+                    </ul>
+                    <h4>Match Swap Flexibility</h4>
+                    <ul>
+                        <li>Swaps with future schedule allowed if opponent isn't playing.</li>
+                        <li>Utilize available slots wisely.</li>
+                    </ul>
+                </div>
+
+                <div class="rule-card">
+                    <h3>Impact Player Rule – Recap & Example</h3>
+                    <ul>
+                        <li>Share Impact Player name before the match.</li>
+                        <li>Each team can use an Impact Player 2 times per season.</li>
+                        <li>Can be a new player or a reconfigured existing player combo.</li>
+                    </ul>
+                    <h4>Example:</h4>
+                    <p>Original Pairs:</p>
+                    <ul>
+                        <li>P1 & P2</li>
+                        <li>P3 & P4</li>
+                    </ul>
+                    <p>If P1 is the Impact Player, you can form:</p>
+                    <ul>
+                        <li>P1 & P4</li>
+                        <li>P1 & P3</li>
+                    </ul>
+                    <p>These can be used in both reverse doubles and tie-break matches. When P1 & P4 are paired, the remaining player P2 will be defaulted to pair with P3 (P2 & P3).</p>
+                    <p>✅ Always declare the Impact Player in advance.</p>
+                </div>
+
+            </div>
+            <p class="rules-footer">
+                🎯 Let's keep it fair, strategic, and fun! 🎾🔥
+            </p>
+        </div>
+    </div>
+</div>
+
+<script>
+    function showTab(group) {
+        document.querySelectorAll('.tab-content').forEach(content => {
+            content.classList.add('hidden');
+        });
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.classList.remove('active');
+        });
+
+        document.getElementById(group + '-content').classList.remove('hidden');
+        event.target.classList.add('active');
+    }
+
+    async function addMatch(event, group) {
+        event.preventDefault();
+
+        const team1Id = document.getElementById('team1' + group).value;
+        const team2Id = document.getElementById('team2' + group).value;
+        const team1Points = document.getElementById('team1Points' + group).value;
+        const team2Points = document.getElementById('team2Points' + group).value;
+        const team1Sets = document.getElementById('team1Sets' + group).value;
+        const team2Sets = document.getElementById('team2Sets' + group).value;
+        const team1Singles = document.getElementById('team1Singles' + group).value;
+        const team2Singles = document.getElementById('team2Singles' + group).value;
+
+        if (parseInt(team1Points) + parseInt(team2Points) !== 5) {
+            alert('Total points must equal 5!');
+            return;
         }
 
-        async function addMatch(event, group) {
-            event.preventDefault();
+        const formData = new FormData();
+        formData.append('team1Id', team1Id);
+        formData.append('team2Id', team2Id);
+        formData.append('team1Points', team1Points);
+        formData.append('team2Points', team2Points);
+        formData.append('team1Sets', team1Sets);
+        formData.append('team2Sets', team2Sets);
+        formData.append('team1Singles', team1Singles);
+        formData.append('team2Singles', team2Singles);
 
-            const team1Id = document.getElementById('team1' + group).value;
-            const team2Id = document.getElementById('team2' + group).value;
-            const team1Points = document.getElementById('team1Points' + group).value;
-            const team2Points = document.getElementById('team2Points' + group).value;
-            const team1Sets = document.getElementById('team1Sets' + group).value;
-            const team2Sets = document.getElementById('team2Sets' + group).value;
-            const team1Singles = document.getElementById('team1Singles' + group).value;
-            const team2Singles = document.getElementById('team2Singles' + group).value;
+        try {
+            const response = await fetch('/api/matches', {
+                method: 'POST',
+                body: formData
+            });
 
-            if (parseInt(team1Points) + parseInt(team2Points) !== 5) {
-                alert('Total points must equal 5!');
-                return;
-            }
-
-            const formData = new FormData();
-            formData.append('team1Id', team1Id);
-            formData.append('team2Id', team2Id);
-            formData.append('team1Points', team1Points);
-            formData.append('team2Points', team2Points);
-            formData.append('team1Sets', team1Sets);
-            formData.append('team2Sets', team2Sets);
-            formData.append('team1Singles', team1Singles);
-            formData.append('team2Singles', team2Singles);
-
-            try {
-                const response = await fetch('/api/matches', {
-                    method: 'POST',
-                    body: formData
-                });
-
-                if (response.ok) {
-                    alert('Match result added successfully!');
-                    location.reload();
-                } else {
-                    alert('Error adding match result!');
-                }
-            } catch (error) {
-                console.error('Error:', error);
+            if (response.ok) {
+                alert('Match result added successfully!');
+                location.reload();
+            } else {
                 alert('Error adding match result!');
             }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Error adding match result!');
         }
-    </script>
+    }
+</script>
 </body>
 </html>

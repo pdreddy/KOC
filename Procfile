@@ -1,0 +1,1 @@
+web: java -Dserver.port=$PORT -Xmx450m -XX:+UseContainerSupport -XX:MaxRAMPercentage=80.0 -jar target/tournament-management-1.0.0.jar
